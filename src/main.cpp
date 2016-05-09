@@ -28,10 +28,8 @@ struct Network {
 //		- number of neurons for each layer
 //----------------------------------------------------------------------
 void init_network(struct Network* n, int numLayers, int numNeurons[]) {
-	struct Layer layers[numLayers];
-
-	// Iterate on layers (except last layer)
-	for (int i = 0 ; i < numLayers - 1 ; i++) {
+	// Iterate on layers
+	for (int i = 0 ; i < numLayers ; i++) {
 		struct Layer* l = new struct Layer;
 
 		// Iterate on neurons for current layer
@@ -62,7 +60,7 @@ void init_network(struct Network* n, int numLayers, int numNeurons[]) {
 void print_weights(struct Network* n) {
 
 	// Iterate on layers
-	for (unsigned int i = 0 ; i < n->layers.size() ; i++) {
+	for (unsigned int i = 0 ; i < n->layers.size() - 1 ; i++) {
 		printf("Layer %d :\n", i);
 		
 		struct Layer* l = n->layers.at(i);
@@ -118,19 +116,35 @@ std::vector<float> front_propagation(struct Network *n, std::vector<float> *inpu
 	}
 
 	// Compute internal results for first layer
-	struct Layer *inputLayer = n->layers.at(0);
+	struct Layer *currentInputLayer = n->layers.at(0);
 	struct Layer *currentOutputLayer = n->layers.at(1);
-	for (unsigned i = 0 ; i < inputLayer->neurons.size() ; i++) { // Iterate on input layer neurons
+	for (unsigned i = 0 ; i < currentInputLayer->neurons.size() ; i++) { // Iterate on input layer neurons
 		
 		// Iterate on current output layer neurons
 		for (unsigned int j = 0 ; j < currentOutputLayer->neurons.size() ; j++) {
-			internalResults.at(0).at(j) += (input->at(i) * inputLayer->neurons.at(i)->weights.at(j));
+			internalResults.at(0).at(j) += (input->at(i) * currentInputLayer->neurons.at(i)->weights.at(j));
 		}
 	}
 	for (unsigned int i = 0 ; i < currentOutputLayer->neurons.size() ; i++) {
 		internalResults.at(0).at(i) = sigmoid(internalResults.at(0).at(i));
+	}
 
-		printf("%f\n", internalResults.at(0).at(i));
+	// Compute remaining internal results
+	for (unsigned int i = 1 ; i < n->layers.size() - 1 ; i++) { // Iterate on layers
+
+		currentInputLayer = n->layers.at(i);
+		currentOutputLayer = n->layers.at(i+1);
+
+		for (unsigned j = 0 ; j < currentInputLayer->neurons.size() ; j++) { // Iterate on input layer neurons
+		
+			// Iterate on current output layer neurons
+			for (unsigned int k = 0 ; k < currentOutputLayer->neurons.size() ; k++) {
+				internalResults.at(i).at(k) += (internalResults.at(i-1).at(j) * currentInputLayer->neurons.at(j)->weights.at(k));
+			}
+		}
+		for (unsigned int j = 0 ; j < currentOutputLayer->neurons.size() ; j++) {
+			internalResults.at(i).at(j) = sigmoid(internalResults.at(i).at(j));
+		}
 	}
 
 	// Result output of last layer
@@ -150,12 +164,16 @@ int main (int argc, char *argv[]) {
 
 	print_weights(&n);
 
-	printf("\n\n");
-
 	input.push_back(0.6);
 	input.push_back(0.8);
 
-	front_propagation(&n, &input);
+	std::vector<float> result = front_propagation(&n, &input);
+
+	printf("\n\n");
+
+	for (unsigned int i = 0 ; i < result.size() ; i++) {
+		printf("%f\n", result.at(i));
+	}
 
 	return 0;
 }
