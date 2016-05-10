@@ -58,6 +58,7 @@ void back_propagation(	struct Network *n, std::vector<std::vector<float> > *inte
 	std::vector<std::vector<float> > deltas;
 
 	// Initialize deltas
+	// NO DELTAS FOR FIRST LAYER, so deltas.at(0) is for SECOND layer
 	for (unsigned int i = 1 ; i < n->layers.size() ; i++) { // Iterate on layers
 		std::vector<float> currentDeltas;
 
@@ -119,14 +120,14 @@ void back_propagation(	struct Network *n, std::vector<std::vector<float> > *inte
 		}
 	}
 
-	// Update weights for other layers (except last one)
+	// Update weights for other layers (except last one because it has no next layer)
 	for (unsigned int i = 1 ; i < n->layers.size() - 1 ; i++) {
 		
 		struct Layer* currentLayer = n->layers.at(i);
 		for (unsigned int j = 0 ; j < currentLayer->neurons.size() ; j++) {
 
 			for (unsigned int k = 0 ; k < currentLayer->neurons.at(j)->weights.size() ; k++) {
-				float deltaW = -speed * deltas.at(i).at(k) * internalResults->at(i-1).at(k);
+				float deltaW = -speed * deltas.at(i).at(k) * internalResults->at(i-1).at(j);
 				currentLayer->neurons.at(j)->weights.at(k) += deltaW;
 			}
 		}
