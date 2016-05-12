@@ -17,12 +17,12 @@ int plot(std::vector<std::vector<float> > values, std::vector<std::string> title
 	gnuplotScript = fopen("gnuplotScript.sh", "w+");
 
 	// Fill script file
-	fprintf(gnuplotScript, "#! /usr/bin/gnuplot\n");
+	fprintf(gnuplotScript, "#! /usr/bin/gnuplot\nplot ");
 	for (unsigned int i = 0 ; i < titles.size() ; i++) {
-		fprintf(gnuplotScript, "plot \"gnuplotData.txt\" using 1:2 title \"%s\" with lines", titles.at(i).c_str());
+		fprintf(gnuplotScript, "\"gnuplotData.txt\" using 1:%d title \"%s\" with lines", i + 2, titles.at(i).c_str());
 
 		if (i < titles.size() - 1) {
-			fprintf(gnuplotScript, ",\n");
+			fprintf(gnuplotScript, ", ");
 		}
 		else {
 			fprintf(gnuplotScript, "\npause -1");

@@ -34,7 +34,7 @@ void learning_sin() {
 
 		error = compute_error(&(result.back()), &desiredOutput);
 		errorsY.push_back(error);
-		back_propagation(&n, &result, &input, &desiredOutput, 0.1);
+		back_propagation(&n, &result, &input, &desiredOutput, 1.0);
 		numIterations++;
 
 		if (error < MAX_ERROR)
@@ -51,22 +51,40 @@ void learning_sin() {
 	for (unsigned int i = 0 ; i < errorsY.size() ; i++) {
 		errorsX.push_back(i);
 	}
+	//std::vector<std::vector<float> > values;
+	//std::vector<std::string> titles;
+	//values.push_back(errorsX);
+	//values.push_back(errorsY);
+	//titles.push_back("Error");
+	//plot(values, titles);
+	
+	// Test of the network
+	// 1. Generate test set
+	std::vector<float> sinTestX;
+	std::vector<float> sinTestYReal;
+	std::vector<float> sinTestYNN;
+
+	for (int i = 0 ; i < TOTAL_NUM_VALUES ; i++) {
+		float x = MIN_X + i * (MAX_X - MIN_X) / TOTAL_NUM_VALUES;
+		
+		sinTestX.push_back(x);
+		sinTestYReal.push_back(sin(x));
+
+		std::vector<float> input;
+		input.push_back(sinTestX.at(i));
+		std::vector<std::vector<float> > result = front_propagation(&n, &input);
+
+		sinTestYNN.push_back((result.back().back() - 0.5)/0.5);
+
+	}
+	
 	std::vector<std::vector<float> > values;
 	std::vector<std::string> titles;
-	values.push_back(errorsX);
-	values.push_back(errorsY);
-	titles.push_back("Error");
+	values.push_back(sinTestX);
+	values.push_back(sinTestYReal);
+	values.push_back(sinTestYNN);
+	titles.push_back("Real");
+	titles.push_back("NN");
 	plot(values, titles);
-	
-	// Let user test the trained network
-	float input;
-	while(1) {
-		scanf("%f", &input);
-		std::vector<float> inputVector;
-		inputVector.push_back(input);
 
-		std::vector<std::vector<float> > result = front_propagation(&n, &inputVector);
-
-		printf("Result : %f\n", (result.back().at(0)-0.5)/0.5);
-	}
 }
