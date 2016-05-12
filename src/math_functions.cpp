@@ -10,7 +10,7 @@ float compute_error(std::vector<float> *output, std::vector<float> *desiredOutpu
 
 	// Check that output and desiredOutput have same length
 	if (output->size() != desiredOutput->size()) {
-		printf("computeError ERROR : output and desiredOutput must have same size\n");
+		print_error("compute_error", "output and desiredOutput must have same size\n");
 		return -1;
 	}
 

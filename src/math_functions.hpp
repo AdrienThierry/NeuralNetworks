@@ -5,6 +5,8 @@
 #include <vector>
 #include <cmath>
 
+#include "utility.hpp"
+
 //----------------------------------------------------------------------
 // Sigmoid function
 // @params :

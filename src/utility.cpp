@@ -33,3 +33,19 @@ void print_float_vector(std::vector<float> *vector) {
 
 	printf("]\n");
 }
+
+void print_error(std::string functionName, std::string errorMessage) {
+	std::string messageToPrint = functionName;
+
+	messageToPrint += " ERROR : ";
+	messageToPrint += errorMessage;
+
+	std::cout << messageToPrint << std::endl;
+}
+
+float random_float(float a, float b) {
+    float random = ((float) rand()) / (float) RAND_MAX;
+    float diff = b - a;
+    float r = random * diff;
+    return a + r;
+}
