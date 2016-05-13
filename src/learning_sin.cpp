@@ -47,19 +47,18 @@ void learning_sin() {
 	printf("\nNumber of iterations : %d\n", numIterations);
 
 	// Make vector with error values
-	std::vector<float> errorsX;
-	for (unsigned int i = 0 ; i < errorsY.size() ; i++) {
-		errorsX.push_back(i);
-	}
-	//std::vector<std::vector<float> > values;
-	//std::vector<std::string> titles;
-	//values.push_back(errorsX);
-	//values.push_back(errorsY);
-	//titles.push_back("Error");
-	//plot(values, titles);
+//	std::vector<float> errorsX;
+//	for (unsigned int i = 0 ; i < errorsY.size() ; i++) {
+//		errorsX.push_back(i);
+//	}
+//	std::vector<std::vector<float> > values;
+//	std::vector<std::string> titles;
+//	values.push_back(errorsX);
+//	values.push_back(errorsY);
+//	titles.push_back("Error");
+//	plot(values, titles);
 	
 	// Test of the network
-	// 1. Generate test set
 	std::vector<float> sinTestX;
 	std::vector<float> sinTestYReal;
 	std::vector<float> sinTestYNN;

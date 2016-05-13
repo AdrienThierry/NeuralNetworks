@@ -18,5 +18,7 @@ float compute_error(std::vector<float> *output, std::vector<float> *desiredOutpu
 		result += ((desiredOutput->at(i) - output->at(i)) * (desiredOutput->at(i) - output->at(i)));
 	}
 
+	result /= 2.0;
+
 	return result;
 }

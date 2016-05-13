@@ -37,7 +37,7 @@ int plot(std::vector<std::vector<float> > values, std::vector<std::string> title
 		fprintf(gnuplotData, "\n");
 	}
 
-	printf("Press a key to continue\n");
+	printf("Press enter to continue\n");
 
 	// Close temporary files
 	fclose(gnuplotData);

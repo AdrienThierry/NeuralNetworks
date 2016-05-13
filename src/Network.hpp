@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include <vector>
 
+#include "utility.hpp"
+
 struct Neuron {
 	std::vector<float> weights; // Weights of connexions with next layer
 	float bias;
