@@ -22,3 +22,26 @@ float compute_error(std::vector<float> *output, std::vector<float> *desiredOutpu
 
 	return result;
 }
+
+std::vector<float> compute_mean_error(std::vector<float> error, int window) {
+	std::vector<float> result;
+
+	for (unsigned int i = 0 ; i < error.size() - window ; i++) {
+		float tmp = 0.0;
+
+		for (int j = 0 ; j < window ; j++) {
+			tmp += error.at(i+j);
+		}
+
+		tmp /= (float)window;
+
+		result.push_back(tmp);
+	}
+
+	for (unsigned int i = error.size() - window ; i < error.size() ; i++) {
+		result.push_back(result.back());
+	}
+
+	return result;
+
+}
