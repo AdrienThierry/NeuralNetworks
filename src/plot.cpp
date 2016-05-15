@@ -7,7 +7,7 @@ int plot(std::vector<std::vector<float> > values, std::vector<std::string> title
 
 	// Check if values and titles have correct sizes
 	if (values.size() != titles.size() + 1) {
-		print_error("plot", "size of titles must be size of values minus 1\n");
+		print_error("plot", "size of titles must be size of values minus 1");
 
 		return -1;
 	}

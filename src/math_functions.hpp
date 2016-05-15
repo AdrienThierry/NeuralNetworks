@@ -33,6 +33,7 @@ float compute_error(std::vector<float> *output, std::vector<float> *desiredOutpu
 //		- window
 // @returns :
 //		- vector with mean error values (same size as input vector)
+//		or empty vector if failed
 //----------------------------------------------------------------------
 std::vector<float> compute_mean_error(std::vector<float> error, int window);
 #endif

@@ -14,13 +14,11 @@ void init_network(struct Network* n, int numLayers, int numNeurons[]) {
 
 				// Iterate on next layer neurons
 				for (int k = 0 ; k < numNeurons[i+1] ; k++) {
-					//neuron->weights.push_back((float)rand() / (float)RAND_MAX);
 					neuron->weights.push_back(random_float(-0.5, 0.5));
 				}
 			}
 
 			// Random bias
-			//neuron->bias = (float)rand() / (float)RAND_MAX;
 			neuron->bias = random_float(-0.5, 0.5);
 
 			l->neurons.push_back(neuron);

@@ -19,10 +19,10 @@ void learning_sin() {
 
 	// Training loop
 	float error;
+	float speed = 1.0;
 	int numIterations = 0;
 	int numGood = 0;
 	std::vector<float> errorsY;
-
 	do {
 		std::vector<float> input;
 		std::vector<float> desiredOutput;
@@ -34,7 +34,7 @@ void learning_sin() {
 
 		error = compute_error(&(result.back()), &desiredOutput);
 		errorsY.push_back(error);
-		back_propagation(&n, &result, &input, &desiredOutput, 1.0);
+		back_propagation(&n, &result, &input, &desiredOutput, speed);
 		numIterations++;
 
 		if (error < MAX_ERROR)
@@ -54,10 +54,13 @@ void learning_sin() {
 	std::vector<std::vector<float> > values;
 	std::vector<std::string> titles;
 	values.push_back(errorsX);
-	std::vector<float> meanErrorsY = compute_mean_error(errorsY, 1000);
+	std::vector<float> meanErrorsY = compute_mean_error(errorsY, MIN_GOOD);
 	//values.push_back(errorsY);
 	values.push_back(meanErrorsY);
 	titles.push_back("Error");
+
+	printf("Final error : %f\n", meanErrorsY.back());
+
 	plot(values, titles);
 	
 	// Test of the network

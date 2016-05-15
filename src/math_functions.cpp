@@ -10,7 +10,7 @@ float compute_error(std::vector<float> *output, std::vector<float> *desiredOutpu
 
 	// Check that output and desiredOutput have same length
 	if (output->size() != desiredOutput->size()) {
-		print_error("compute_error", "output and desiredOutput must have same size\n");
+		print_error("compute_error", "output and desiredOutput must have same size");
 		return -1;
 	}
 
@@ -25,6 +25,12 @@ float compute_error(std::vector<float> *output, std::vector<float> *desiredOutpu
 
 std::vector<float> compute_mean_error(std::vector<float> error, int window) {
 	std::vector<float> result;
+
+	// Check that error vector size is bigger than window
+	if (error.size() <= (unsigned int)window) {
+		print_error("compute_mean_error", "error vector size must be bigger than window");
+		return result;
+	}
 
 	for (unsigned int i = 0 ; i < error.size() - window ; i++) {
 		float tmp = 0.0;

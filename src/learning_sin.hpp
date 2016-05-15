@@ -13,9 +13,9 @@
 #include "plot.hpp"
 #include "Network.hpp"
 
-#define MAX_ERROR 0.0001
+#define MAX_ERROR 0.001
 #define MIN_GOOD 100 // Number of successive times the network must achieve an error below the max error
-#define TOTAL_NUM_VALUES 30000 // Total number of values in data set (training + validation + test)
+#define TOTAL_NUM_VALUES 1000 // Total number of values in data set (training + validation + test)
 #define MIN_X 0.0
 #define MAX_X 10
 
