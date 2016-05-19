@@ -49,3 +49,24 @@ float random_float(float a, float b) {
     float r = random * diff;
     return a + r;
 }
+
+void write_pgm_image(std::string path, uchar* image, int size) {
+	FILE* file = NULL;
+
+	file = fopen(path.c_str(), "w+");
+	
+	int dim = sqrt(size);
+
+	// Write header
+	fprintf(file, "P2\n%d %d\n255\n", dim, dim);
+
+	// Write image
+	for (int row = 0 ; row < dim ; row++) {
+		for (int col = 0 ; col < dim ; col++) {
+			fprintf(file, "%d ", image[row*dim+col]);
+		}
+		fprintf(file, "\n");
+	}
+
+	fclose(file);
+}

@@ -1,6 +1,9 @@
 cmake_minimum_required (VERSION 2.6)
 project (NeuralNetworks)
 
+##################################################
+# Add all warnings
+##################################################
 if(MSVC)
   # Force to always compile with W4
   if(CMAKE_CXX_FLAGS MATCHES "/W[0-4]")
@@ -13,4 +16,6 @@ elseif(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-long-long -pedantic")
 endif()
 
-add_executable(NeuralNetworks src/main.cpp src/Network.cpp src/propagation.cpp src/math_functions.cpp src/utility.cpp src/plot.cpp src/learning_sin.cpp)
+add_executable(NeuralNetworks src/main.cpp src/Network.cpp src/propagation.cpp src/math_functions.cpp src/utility.cpp src/plot.cpp src/learning_sin.cpp src/mnist.cpp)
+
+set(CMAKE_BUILD_TYPE Release)

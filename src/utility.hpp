@@ -5,7 +5,10 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include <cmath>
 #include "Network.hpp"
+
+typedef unsigned char uchar;
 
 //----------------------------------------------------------------------
 // Print weights in network
@@ -38,5 +41,14 @@ void print_error(std::string functionName, std::string errorMessage);
 //		- random value between min and max
 //----------------------------------------------------------------------
 float random_float(float a, float b);
+
+//----------------------------------------------------------------------
+// Write pgm file from uchar array
+// @params :
+//		- path of the resulting image
+//		- uchar array describing the image
+//		- size of the image (cols*rows). Cols MUST be equal to rows
+//----------------------------------------------------------------------
+void write_pgm_image(std::string path, uchar* image, int size);
 
 #endif
