@@ -49,6 +49,10 @@ void learning_mnist(std::string trainingImagesPath, std::string trainingLabelsPa
 	float speed = 1.0;
 	int percent = 0;
 	std::vector<float> errorsY;
+	// Time measurement
+	clock_t begin, end;
+	float time_spent;
+	begin = clock();
 	for (int i = 0 ; i < numTrainingImages ; i++) {
 		std::vector<std::vector<float> > result = front_propagation(&n, &(trainingInputs.at(i)));
 
@@ -61,6 +65,9 @@ void learning_mnist(std::string trainingImagesPath, std::string trainingLabelsPa
 			printf("%d %%\n", percent);
 		}
 	}
+	end = clock();
+	time_spent = (float)(end - begin) / (float)CLOCKS_PER_SEC;
+	printf("Time spent for training : %f s\n", time_spent);
 
 	// Compute and plot mean error
 	std::vector<float> errorsX;
