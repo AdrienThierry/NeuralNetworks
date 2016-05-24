@@ -62,46 +62,43 @@ void back_propagation(	struct Network *n, std::vector<std::vector<float> > *inte
 
 	// Initialize deltas
 	// NO DELTAS FOR FIRST LAYER, so deltas.at(0) is for SECOND layer
-	for (unsigned int i = 1 ; i < n->layers.size() ; ++i) { // Iterate on layers
-		std::vector<float> currentDeltas;
-
-		struct Layer* l = n->layers.at(i);
-
-		// Iterate on neurons in layer
-		for (unsigned int j = 0 ; j < l->neurons.size() ; ++j) {
-			currentDeltas.push_back(0.0);
-		}
-
-		deltas.push_back(currentDeltas);
+	unsigned int numLayers = n->layers.size();
+	for (unsigned int i = 1 ; i < numLayers ; ++i) { // Iterate on layers
+		deltas.emplace_back(n->layers.at(i)->neurons.size());
 	}
 
 	// Compute deltas for last layer
 	std::vector<float> *lastLayerDeltas = &(deltas.back());
 	struct Layer *lastLayer = n->layers.back();
-	for (unsigned int i = 0 ; i < lastLayer->neurons.size() ; ++i) { // Iterate on neurons
+	unsigned int numNeuronsLastLayer = lastLayer->neurons.size();
+	for (unsigned int i = 0 ; i < numNeuronsLastLayer ; ++i) { // Iterate on neurons
+		float currentOutput = internalResults->back().at(i);
+
 		float currentDelta = 1.0;
-		currentDelta *= internalResults->back().at(i);
-		currentDelta *= (1.0 - internalResults->back().at(i));
-		currentDelta *= (internalResults->back().at(i) - desiredOutput->at(i));
+		currentDelta *= currentOutput;
+		currentDelta *= (1.0 - currentOutput);
+		currentDelta *= (currentOutput - desiredOutput->at(i));
 
 		lastLayerDeltas->at(i) = currentDelta;
 	}
 
 	// Compute deltas for remaining layers except first one
-	// TODO : parcours dans l'autre sens ?
-	for (unsigned int i = n->layers.size() - 2 ; i > 0 ; --i) { // Iterate on layers
+	for (unsigned int i = numLayers - 2 ; i > 0 ; --i) { // Iterate on layers
 		struct Layer* currentLayer = n->layers.at(i);
 		std::vector<float> *currentLayerDeltas = &(deltas.at(i-1));
 		std::vector<float> *nextLayerDeltas = &(deltas.at(i));
 
-		for (unsigned int j = 0 ; j < currentLayer->neurons.size() ; ++j) {
+		unsigned int numNeuronsCurrentLayer = currentLayer->neurons.size();
+		unsigned int numNextLayerDeltas = nextLayerDeltas->size();
+
+		for (unsigned int j = 0 ; j < numNeuronsCurrentLayer ; ++j) {
 
 			struct Neuron* currentNeuron = currentLayer->neurons.at(j);
 
 			// Compute sum of weighted next layer deltas
 			float weightedSumNextLayerDeltas = 0.0;
 
-			for (unsigned int k = 0 ; k < nextLayerDeltas->size() ; ++k) { // Iterate on next layer deltas
+			for (unsigned int k = 0 ; k < numNextLayerDeltas ; ++k) { // Iterate on next layer deltas
 				weightedSumNextLayerDeltas += (nextLayerDeltas->at(k) * currentNeuron->weights.at(k));			
 			}
 
@@ -116,21 +113,32 @@ void back_propagation(	struct Network *n, std::vector<std::vector<float> > *inte
 
 	// Update weights for first layer
 	struct Layer* firstLayer = n->layers.at(0);
-	for (unsigned int i = 0 ; i < firstLayer->neurons.size() ; ++i) {
+	unsigned int numNeuronsFirstLayer = firstLayer->neurons.size();
+	std::vector<float> firstDeltas = deltas.at(0);
+	for (unsigned int i = 0 ; i < numNeuronsFirstLayer ; ++i) {
 
-		for (unsigned int j = 0 ; j < firstLayer->neurons.at(i)->weights.size() ; ++j) {
-			float deltaW = -speed * deltas.at(0).at(j) * inputs->at(i);
-			firstLayer->neurons.at(i)->weights.at(j) += deltaW;
+		unsigned int numWeights = firstLayer->neurons.at(i)->weights.size();
+		
+		float iThInput = inputs->at(i);
+
+		struct Neuron* iThNeuron = firstLayer->neurons.at(i);
+
+		for (unsigned int j = 0 ; j < numWeights ; ++j) {
+			float deltaW = -speed * firstDeltas.at(j) * iThInput;
+			iThNeuron->weights.at(j) += deltaW;
 		}
 	}
 
 	// Update weights for other layers (except last one because it has no next layer)
-	for (unsigned int i = 1 ; i < n->layers.size() - 1 ; ++i) {
+	for (unsigned int i = 1 ; i < numLayers - 1 ; ++i) {
 		
 		struct Layer* currentLayer = n->layers.at(i);
-		for (unsigned int j = 0 ; j < currentLayer->neurons.size() ; ++j) {
+		unsigned int numNeuronsCurrentLayer = currentLayer->neurons.size();
+		for (unsigned int j = 0 ; j < numNeuronsCurrentLayer ; ++j) {
 
-			for (unsigned int k = 0 ; k < currentLayer->neurons.at(j)->weights.size() ; ++k) {
+			unsigned int numWeights = currentLayer->neurons.at(j)->weights.size();
+
+			for (unsigned int k = 0 ; k < numWeights ; ++k) {
 				float deltaW = -speed * deltas.at(i).at(k) * internalResults->at(i-1).at(j);
 				currentLayer->neurons.at(j)->weights.at(k) += deltaW;
 			}
@@ -138,10 +146,11 @@ void back_propagation(	struct Network *n, std::vector<std::vector<float> > *inte
 	}
 
 	// Update bias
-	for (unsigned int i = 1 ; i < n->layers.size() ; ++i) {
+	for (unsigned int i = 1 ; i < numLayers ; ++i) {
 		struct Layer* currentLayer = n->layers.at(i);
+		unsigned int numNeuronsCurrentLayer = currentLayer->neurons.size();
 
-		for (unsigned int j = 0 ; j < currentLayer->neurons.size() ; ++j) {
+		for (unsigned int j = 0 ; j < numNeuronsCurrentLayer ; ++j) {
 			float deltaBias = -speed * deltas.at(i-1).at(j);
 			currentLayer->neurons.at(j)->bias += deltaBias;
 		}
