@@ -62,7 +62,7 @@ void learning_mnist(std::string trainingImagesPath, std::string trainingLabelsPa
 
 		if ((int)((float)i / (float)numTrainingImages * 100) > percent) {
 			percent = (int)((float)i / (float)numTrainingImages * 100);
-			printf("%d %%\n", percent);
+			printf("Learning : %d %%\n", percent);
 		}
 	}
 	end = clock();
@@ -105,14 +105,16 @@ void learning_mnist(std::string trainingImagesPath, std::string trainingLabelsPa
 
 	// Test loop
 	percent = 0;
+	const char* dir_name = "result";
+	mkdir(dir_name, 0700);
 	for (int i = 0 ; i < numTestImages ; i++) {
 		std::vector<std::vector<float> > result = front_propagation(&n, &(testInputs.at(i)));
 
 		error = compute_error(&(result.back()), &(testDesiredOutputs.at(i)));
 
 		if (i % 100 == 0) {
-			printf("Test %d/%d : error = %f\n", i, numTestImages, error);
-			std::string path = "result/";
+			printf("Test %d/%d : error = %f\n", i/100 + 1, numTestImages/100, error);
+			std::string path = std::string(dir_name) + "/";
 			path += std::to_string(decode_output(&(result.back())));
 			path += "_";
 			path += std::to_string(i);
