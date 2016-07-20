@@ -27,6 +27,7 @@ void learning_mnist(std::string trainingImagesPath, std::string trainingLabelsPa
 	init_network(&n, 3, numNeurons);
 
 	// Remove all previous results
+	mkdir(dir_name, 0700);
 	DIR *theFolder = opendir(dir_name);
     struct dirent *next_file;
     char filepath[256];
@@ -119,7 +120,6 @@ void learning_mnist(std::string trainingImagesPath, std::string trainingLabelsPa
 
 	// Test loop
 	percent = 0;
-	mkdir(dir_name, 0700);
 	for (int i = 0 ; i < numTestImages ; i++) {
 		std::vector<std::vector<float> > result = front_propagation(&n, &(testInputs.at(i)));
 
