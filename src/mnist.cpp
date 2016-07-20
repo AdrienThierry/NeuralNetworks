@@ -14,6 +14,8 @@ void learning_mnist(std::string trainingImagesPath, std::string trainingLabelsPa
 	std::vector<std::vector<float> > testInputs;
 	std::vector<std::vector<float> > testDesiredOutputs;
 
+	const char* dir_name = "result";
+
 	// Read data files
 	uchar** trainingImages = read_mnist_images(trainingImagesPath, numTrainingImages, imageSize);
 	uchar** testImages = read_mnist_images(testImagesPath, numTestImages, imageSize);
@@ -23,6 +25,18 @@ void learning_mnist(std::string trainingImagesPath, std::string trainingLabelsPa
 	// Initialize network
 	int numNeurons[3] = {imageSize, NUM_HIDDEN_NEURONS, 10};
 	init_network(&n, 3, numNeurons);
+
+	// Remove all previous results
+	DIR *theFolder = opendir(dir_name);
+    struct dirent *next_file;
+    char filepath[256];
+    while ( (next_file = readdir(theFolder)) != NULL )
+    {
+        // build the path for each file in the folder
+        sprintf(filepath, "%s/%s", dir_name, next_file->d_name);
+        remove(filepath);
+    }
+    closedir(theFolder);
 
 	// Create training vectors
 	for (int i = 0 ; i < numTrainingImages ; i++) {
@@ -105,7 +119,6 @@ void learning_mnist(std::string trainingImagesPath, std::string trainingLabelsPa
 
 	// Test loop
 	percent = 0;
-	const char* dir_name = "result";
 	mkdir(dir_name, 0700);
 	for (int i = 0 ; i < numTestImages ; i++) {
 		std::vector<std::vector<float> > result = front_propagation(&n, &(testInputs.at(i)));

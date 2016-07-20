@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 #include <time.h>
+#include <dirent.h>
 #include <sys/stat.h>
 
 #include "utility.hpp"
